@@ -63,10 +63,16 @@ class UserController extends Controller
         $photo = $request->file('image');
 
         if ($photo) {
-            $request['photo'] = $this->uploadImage($photo, $request->name, 'profile');
+            $photoName = $this->uploadImage($photo, $request->name, 'profile');
+            $request['photo'] = $photoName;
         }
+
         $request['password'] = Hash::make($request->password);
-        User::create($request->all());
+
+        $user = User::create($request->all());
+        $user->photo = $photoName;
+        $user->save();
+
         return redirect()->route('user.index');
     }
 
@@ -103,7 +109,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
+        $user = User::find($id);
         $photo = $request->file('image');
 
         if ($photo) {
@@ -117,7 +123,7 @@ class UserController extends Controller
             $request['password'] = $user->password;
         }
 
-        $user->save();
+        $user->update($request->all());
 
         return redirect()->route('user.index');
     }
