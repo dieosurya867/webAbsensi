@@ -18,11 +18,11 @@ class Attendance extends Model
 
     public function detail()
 {
-    return $this->hasMany(AttendanceDetail::class, 'absen_id');
+    return $this->hasOne(AttendanceDetail::class, 'absen_id');
 }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 }
